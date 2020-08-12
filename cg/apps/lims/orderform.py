@@ -198,6 +198,7 @@ def parse_sample(raw_sample):
         "custom_index": raw_sample.get("UDF/Custom index"),
         "customer": raw_sample["UDF/customer"],
         "data_analysis": raw_sample["UDF/Data Analysis"],
+        "data_delivery": raw_sample["UDF/Data Delivery"],
         "elution_buffer": raw_sample.get("UDF/Sample Buffer"),
         "extraction_method": raw_sample.get("UDF/Extraction method"),
         "formalin_fixation_time": raw_sample.get("UDF/Formalin Fixation Time"),
