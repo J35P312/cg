@@ -22,7 +22,7 @@ class BaseView(ModelView):
 def view_human_priority(unused1, unused2, model, unused3):
     """column formatter for priority"""
     del unused1, unused2, unused3
-    return Markup(u"%s" % (model.priority_human)) if model else u""
+    return Markup(u"%s" % model.priority_human) if model else u""
 
 
 def view_family_sample_link(unused1, unused2, model, unused3):
