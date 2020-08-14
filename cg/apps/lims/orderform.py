@@ -144,6 +144,7 @@ def expand_case(case_id, parsed_case):
             "comment",
             "container_name",
             "data_analysis",
+            "data_delivery",
             "elution_buffer",
             "formalin_fixation_time",
             "from_sample",
