@@ -148,10 +148,12 @@ class UploadScoutAPI:
         return file_obj
 
     def _include_optional_files(self, data, hk_version):
+        """"Optional files on case level"""
         scout_hk_map = [
             ("delivery_report", "delivery-report"),
             ("multiqc", "multiqc-html"),
             ("vcf_str", "vcf-str"),
+            ("smn_tsv", "smn-calling"),
         ]
         self._include_files(data, hk_version, scout_hk_map)
 
