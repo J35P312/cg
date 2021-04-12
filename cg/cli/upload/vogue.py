@@ -14,7 +14,7 @@ from cg.store import Store, models
 
 LOG = logging.getLogger(__name__)
 
-VOGUE_VALID_BIOINFO = [str(Pipeline.MIP_DNA), str(Pipeline.BALSAMIC)]
+VOGUE_VALID_BIOINFO = [str(Pipeline.BALSAMIC)]
 
 
 @click.group()
@@ -171,6 +171,12 @@ def bioinfo(context, case_name, cleanup, target_load, dry):
     workflow_name, workflow_version = _get_analysis_workflow_details(
         analysis_api.status_db, case_name
     )
+   
+    if workflow_name is None: 
+        raise AnalysisUploadError(f"Case upload failed: {case_name}. Reason: Bad workflow name.")
+
+    workflow_name = workflow_name.lower()
+
     if workflow_name not in VOGUE_VALID_BIOINFO:
         raise AnalysisUploadError(f"Case upload failed: {case_name}. Reason: Bad workflow name.")
     load_bioinfo_raw_inputs["analysis_workflow_name"] = workflow_name
@@ -276,4 +282,4 @@ def _get_analysis_workflow_details(status_api: Store, case_name: str) -> Tuple[A
         workflow_name = case_obj.analyses[0].pipeline
         workflow_version = case_obj.analyses[0].pipeline_version
 
-    return workflow_name.lower(), workflow_version
+    return workflow_name, workflow_version
