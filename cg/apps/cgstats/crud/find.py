@@ -119,7 +119,7 @@ def project_sample_stats(flowcell: str, project_name: Optional[str] = None) -> a
         query.join(models.Sample.samplename, models.Flowcell.flowcellname, lanes, reads, yld)
         .group_by(models.Sample.samplename, models.Flowcell.flowcell_id)
         .order_by(models.Unaligned.lane, models.Sample.samplename, models.Flowcell.flowcellname)
-    )
+    ).subquery()
 
     """query = query.with_entities(
             models.Sample.samplename,
