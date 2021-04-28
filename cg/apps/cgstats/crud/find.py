@@ -93,28 +93,51 @@ def project_sample_stats(flowcell: str, project_name: Optional[str] = None) -> a
         query = query.join(models.Sample.project).filter(models.Project.projectname == project_name)
 
     query = query.filter(models.Flowcell.flowcellname == flowcell)
-
-    query = query.with_entities(
-        models.Sample.samplename,
-        models.Flowcell.flowcellname,
-        func.group_concat(models.Unaligned.lane.order_dy(models.Unaligned.lane)).label("lanes"),
-        func.group_concat(models.Unaligned.readcounts.order_by(models.Unaligned.lane)).label(
-            "reads"
-        ),
-        func.sum(models.Unaligned.readcounts).label("readsum"),
-        func.group_concat(models.Unaligned.yield_mb.order_by(models.Unaligned.lane)).label("yld"),
-        func.sum(models.Unaligned.yield_mb).label("yieldsum"),
-        func.group_concat(
-            func.truncate(models.Unaligned.q30_bases_pct, 2).order_by(models.Unaligned.lane)
-        ).label("q30"),
-        func.group_concat(
-            func.truncate(models.Unaligned.mean_quality_score, 2).order_by(models.Unaligned.lane)
-        ).label("meanq"),
+    lanes = (
+        query.join(models.Unaligned.lane)
+        .label("lanes")
+        .order_by(models.Unaligned.lane)
+        .group_by(models.Unaligned.lane)
+        .subquery()
+    )
+    reads = (
+        query.join(models.Unaligned.redcounts)
+        .label("reads")
+        .order_by(models.Unaligned.lane)
+        .group_by(models.Unaligned.readcounts)
+        .subquery()
+    )
+    yld = (
+        query.join(models.Unaligned.yield_mb)
+        .label("yld")
+        .order_by(models.Unaligned.lane)
+        .group_by(models.Unaligned.yield_mb)
+        .subquery()
     )
 
-    query = query.group_by(models.Sample.samplename, models.Flowcell.flowcell_id)
-    query = query.order_by(
-        models.Unaligned.lane, models.Sample.samplename, models.Flowcell.flowcellname
+    query = (
+        query.join(models.Sample.samplename, models.Flowcell.flowcellname, lanes, reads, yld)
+        .group_by(models.Sample.samplename, models.Flowcell.flowcell_id)
+        .order_by(models.Unaligned.lane, models.Sample.samplename, models.Flowcell.flowcellname)
     )
+
+    """query = query.with_entities(
+            models.Sample.samplename,
+            models.Flowcell.flowcellname,
+            func.group_concat(models.Unaligned.lane.order_dy(models.Unaligned.lane)).label("lanes"),
+            func.group_concat(models.Unaligned.readcounts.order_by(models.Unaligned.lane)).label(
+                "reads"
+            ),
+            func.sum(models.Unaligned.readcounts).label("readsum"),
+            func.group_concat(models.Unaligned.yield_mb.order_by(models.Unaligned.lane)).label("yld"),
+            func.sum(models.Unaligned.yield_mb).label("yieldsum"),
+            func.group_concat(
+                func.truncate(models.Unaligned.q30_bases_pct, 2).order_by(models.Unaligned.lane)
+            ).label("q30"),
+            func.group_concat(
+                func.truncate(models.Unaligned.mean_quality_score, 2).order_by(models.Unaligned.lane)
+            ).label("meanq"),
+        )
+    """
 
     return query
