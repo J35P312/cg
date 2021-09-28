@@ -26,16 +26,18 @@ touch {demux_completed_file}
 log "bcl2fastq finished!"
 """,
     "dragen": """
-log "dragen --bcl-conversion-only true \
---intermediate-results-dir /staging/demux-interm-results-dir/
+log "dragen \
+--config-file /home/proj/stage/flowcells/novaseq/runs/dragen-novaseq-demux.cfg
+--bcl-conversion-only true \
 --bcl-input-directory {run_dir} \
 --output-directory {unaligned_dir} \
 --bcl-sampleproject-subdirectories true \
 --force   
 touch {demux_completed_file}"
 
-dragen --bcl-conversion-only true \
---intermediate-results-dir /staging/demux-interm-results-dir/
+dragen \
+--config-file /home/proj/stage/flowcells/novaseq/runs/dragen-novaseq-demux.cfg
+--bcl-conversion-only true \
 --bcl-input-directory {run_dir} \
 --output-directory {unaligned_dir} \
 --bcl-sampleproject-subdirectories true \
