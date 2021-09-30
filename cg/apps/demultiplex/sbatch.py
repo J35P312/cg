@@ -27,16 +27,14 @@ log "bcl2fastq finished!"
 """,
     "dragen": """
 log "dragen --bcl-conversion-only true \
---intermediate-results-dir /staging/demux-interm-results-dir/
---bcl-input-directory {run_dir} \
+--bcl-input-directory /staging/novaseq-demux/210922_A00621_0492_AH5LWWDSX2 \
 --output-directory {unaligned_dir} \
 --bcl-sampleproject-subdirectories true \
 --force   
 touch {demux_completed_file}"
 
 dragen --bcl-conversion-only true \
---intermediate-results-dir /staging/demux-interm-results-dir/
---bcl-input-directory {run_dir} \
+--bcl-input-directory /staging/novaseq-demux/210922_A00621_0492_AH5LWWDSX2 \
 --output-directory {unaligned_dir} \
 --bcl-sampleproject-subdirectories true \
 --force   
