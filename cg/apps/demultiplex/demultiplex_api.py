@@ -154,9 +154,9 @@ class DemultiplexingAPI:
         if not flowcell.is_flowcell_ready():
             demultiplexing_possible = False
 
-        if not flowcell.sample_sheet_exists():
-            LOG.warning("Could not find sample sheet for %s", flowcell.flowcell_id)
-            demultiplexing_possible = False
+        # if not flowcell.sample_sheet_exists():
+        #     LOG.warning("Could not find sample sheet for %s", flowcell.flowcell_id)
+        #     demultiplexing_possible = False
 
         if flowcell.is_demultiplexing_started():
             LOG.warning("Demultiplexing has already been started")
